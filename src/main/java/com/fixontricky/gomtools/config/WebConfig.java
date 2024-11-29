@@ -13,7 +13,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Allows all endpoints
-                        .allowedOrigins("https://gomtools-fe-dev.up.railway.app") // Add the origin of your external app here
+                        .allowedOrigins("https://gomtools-fe-dev.up.railway.app", "") // Add the origin of your external app here
                         .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
                         .allowedHeaders("*")
                         .allowCredentials(true); // Allows credentials like cookies
