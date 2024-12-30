@@ -10,25 +10,26 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GroupOrderItemModel {
-
     @Id
     private int id;
-    private String name;
-    private int setNumber;
-    private double price;
-
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     @ManyToOne(optional = false)
     private GroupOrderModel groupOrder;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    private JoinerModel joiner;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    private String name;
+
+    private double price;
+
+    @ManyToOne (optional = true)
     private MemberModel member;
 
-    @ManyToOne
-    private JoinerModel joiner;
 }

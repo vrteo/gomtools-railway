@@ -17,19 +17,39 @@ public class GOController {
 
     @Autowired
     private GroupOrderService goService;
+    
+    @PostMapping
+    public ResponseEntity<GODTO> createGO(@RequestBody GODTO goDto) {
+        logger.info("Creating new GO: {}", goDto);
+        GODTO createdGO = goService.create(goDto);
+        return ResponseEntity.ok(createdGO);
+    }
 
     @GetMapping
-    public List<GODTO> getAll() {
-        return goService.getAll();
+    public ResponseEntity<List<GODTO>> getGOs() {
+        logger.info("Fetching all GOs");
+        List<GODTO> gos = goService.getAll();
+        return ResponseEntity.ok(gos);
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<GODTO> getById(@RequestParam int id) {
-        return ResponseEntity.ok(goService.getById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<GODTO> getGOById(@PathVariable int id) {
+        logger.info("Fetching GO with ID: {}", id);
+        GODTO go = goService.getById(id);
+        return ResponseEntity.ok(go);
     }
 
-//    @PostMapping
-//    public ResponseEntity<GODTO> createJoiner(@RequestBody GODTO dto) {
-//        return ResponseEntity.ok(goService.create(dto));
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<GODTO> updateGO(@PathVariable int id, @RequestBody GODTO goDto) {
+        logger.info("Updating GO with ID: {}", id);
+        GODTO updatedGO = goService.update(id, goDto);
+        return ResponseEntity.ok(updatedGO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGO(@PathVariable int id) {
+        logger.info("Deleting GO with ID: {}", id);
+        goService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

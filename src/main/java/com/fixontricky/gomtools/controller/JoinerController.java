@@ -1,7 +1,6 @@
 package com.fixontricky.gomtools.controller;
 
 import com.fixontricky.gomtools.DTO.JoinerDTO;
-import com.fixontricky.gomtools.model.JoinerModel;
 import com.fixontricky.gomtools.service.JoinerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,27 +15,27 @@ public class JoinerController {
     private JoinerService joinerService;
 
     @GetMapping
-    public List<JoinerDTO> getAll() {
-        return joinerService.getAll();
+    public ResponseEntity<List<JoinerDTO>> getAllJoiners() {
+        List<JoinerDTO> joiners = joinerService.getAll();
+        return ResponseEntity.ok(joiners);
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<JoinerDTO> getById(@RequestParam int id) {
-        return ResponseEntity.ok(joinerService.getById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<JoinerDTO> getJoinerById(@PathVariable int id) {
+        JoinerDTO joiner = joinerService.getById(id);
+        return ResponseEntity.ok(joiner);
     }
 
     @PostMapping
-    public ResponseEntity<JoinerDTO> createJoiner(@RequestBody JoinerDTO dto) {
-        return ResponseEntity.ok(joinerService.create(dto));
+    public ResponseEntity<JoinerDTO> createJoiner(@RequestBody JoinerDTO joinerDTO) {
+        JoinerDTO createdJoiner = joinerService.create(joinerDTO);
+        return ResponseEntity.status(201).body(createdJoiner);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<JoinerDTO> updateJoiner(@RequestParam int id, @RequestBody JoinerDTO joinerDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<JoinerDTO> updateJoiner(@PathVariable Long id, @RequestBody JoinerDTO joinerDTO) {
         JoinerDTO updatedJoiner = joinerService.update(id, joinerDTO);
-        if (updatedJoiner != null) {
-            return ResponseEntity.ok(updatedJoiner);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedJoiner);
     }
 
     @DeleteMapping("/{id}")

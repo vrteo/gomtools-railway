@@ -19,6 +19,6 @@ public class GroupModel {
     @OneToMany(mappedBy = "group")
     private List<MemberModel> members = new ArrayList<>();
 
-    @OneToOne(mappedBy = "group", optional = false)
-    private GroupOrderModel groupOrder;
+    @OneToMany(mappedBy = "groupOrder")
+    private List<GroupOrderModel> groupOrder;
 }

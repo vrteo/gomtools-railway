@@ -4,7 +4,6 @@ import com.fixontricky.gomtools.DTO.JoinerDTO;
 import com.fixontricky.gomtools.exceptions.BadRequestException;
 import com.fixontricky.gomtools.exceptions.ResourceNotFoundException;
 import com.fixontricky.gomtools.model.JoinerModel;
-import org.hibernate.mapping.Join;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.fixontricky.gomtools.repository.JoinerRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +45,7 @@ public class JoinerService {
         return joiner;
     }
 
-    public JoinerDTO update(int id, JoinerDTO dto) {
+    public JoinerDTO update(Long id, JoinerDTO dto) {
         JoinerModel joiner = joinerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Joiner not found with ID: " + id));
 

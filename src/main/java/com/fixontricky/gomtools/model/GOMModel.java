@@ -12,5 +12,7 @@ import lombok.Setter;
 public class GOMModel {
     @Id
     private String username;
+
+    //TODO: encryption
     private String password;
 }

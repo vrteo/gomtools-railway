@@ -17,16 +17,17 @@ public class GroupOrderModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @ManyToOne
     private GroupModel group;
 
-    private String storeName;
-    private String goms;
-    //    private int nrOfSets = 0; // TODO: might need to adjust the logic here
+    private String name;
+
+    // Metadata
     private Instant dateCreated = Instant.now();
     private Instant dateLastUpdated;
-//    private String updateReason;
+    private String updateReason;
 
+    // Items
     @OneToMany(mappedBy = "groupOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GroupOrderItemModel> items = new ArrayList<>();
+    private List<GroupOrderItemModel> goItems = new ArrayList<>();
 }
