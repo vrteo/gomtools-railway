@@ -45,7 +45,7 @@ public class JoinerService {
         return joiner;
     }
 
-    public JoinerDTO update(Long id, JoinerDTO dto) {
+    public JoinerDTO update(int id, JoinerDTO dto) {
         JoinerModel joiner = joinerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Joiner not found with ID: " + id));
 

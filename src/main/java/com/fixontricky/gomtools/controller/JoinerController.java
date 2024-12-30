@@ -33,7 +33,7 @@ public class JoinerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JoinerDTO> updateJoiner(@PathVariable Long id, @RequestBody JoinerDTO joinerDTO) {
+    public ResponseEntity<JoinerDTO> updateJoiner(@PathVariable int id, @RequestBody JoinerDTO joinerDTO) {
         JoinerDTO updatedJoiner = joinerService.update(id, joinerDTO);
         return ResponseEntity.ok(updatedJoiner);
     }
