@@ -82,6 +82,9 @@ public class GroupOrderService {
             GroupOrderModel groupOrder = new GroupOrderModel();
             groupOrder.setName(godto.getName());
             GroupModel group = groupRepository.findGroupModelByGroupName(godto.getGroupName()).orElse(null);
+            if (godto.getGomNames() != null && !godto.getGomNames().isEmpty()) {
+                groupOrder.setGoms(gomRepository.findByUsernameIn(godto.getGomNames()).stream().toList());
+            }
 
             logger.info("Group with name {}: {}.", godto.getGroupName(), group);
 
