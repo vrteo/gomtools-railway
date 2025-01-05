@@ -2,12 +2,10 @@ package com.fixontricky.gomtools.service;
 
 import com.fixontricky.gomtools.DTO.GODTO;
 import com.fixontricky.gomtools.exceptions.ResourceNotFoundException;
+import com.fixontricky.gomtools.model.GOMModel;
 import com.fixontricky.gomtools.model.GroupModel;
 import com.fixontricky.gomtools.model.GroupOrderModel;
-import com.fixontricky.gomtools.repository.GroupOrderItemRepository;
-import com.fixontricky.gomtools.repository.GroupOrderRepository;
-import com.fixontricky.gomtools.repository.GroupRepository;
-import com.fixontricky.gomtools.repository.MemberRepository;
+import com.fixontricky.gomtools.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ public class GroupOrderService {
     private MemberRepository memberRepository;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private GOMRepository gomRepository;
 
     public List<GODTO> getAll() {
         return groupOrderRepository.findAll().stream()
@@ -41,27 +41,21 @@ public class GroupOrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Group Order with ID " + id + "not found"));
     }
 
-    public GODTO create(GODTO godto) {
-        try {
-            logger.info("Creating group order model for store: {}.", godto.getName());
-    
-            GroupOrderModel groupOrder = new GroupOrderModel();
-            groupOrder.setName(godto.getName());
-            GroupModel group = groupRepository.findGroupModelByGroupName(godto.getGroupName()).orElse(null);
-    
-            logger.info("Group with name {}: {}.", godto.getGroupName(), group);
-    
-            groupOrder.setGroup(group);
-            groupOrder.setDateLastUpdated(Instant.now());
-            groupOrderRepository.save(groupOrder);
-    
-            logger.info("Group order with name {} saved successfully.", godto.getName());
-    
-            return toDTO(groupOrder);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
+    public static GODTO toDTO(GroupOrderModel model) {
+        if (model == null) {
+            throw new IllegalArgumentException("GroupOrderModel is null and cannot be converted to GODTO.");
         }
+        GODTO dto = new GODTO();
+        dto.setId(model.getId());
+        dto.setGroupName(model.getGroup().getGroupName());
+        dto.setName(model.getName());
+        dto.setDateCreated(model.getDateCreated());
+        dto.setDateLastUpdated(model.getDateLastUpdated());
+        if (model.getGoms() != null && !model.getGoms().isEmpty()) {
+            dto.setGomNames(model.getGoms().stream().map(GOMModel::getUsername).toList());
+        }
+
+        return dto;
     }
 
     public GODTO update(int id, GODTO godto) {
@@ -80,21 +74,31 @@ public class GroupOrderService {
         }
         groupOrderRepository.deleteById(id);
     }
-    
-    public static GODTO toDTO(GroupOrderModel model) {
-        if (model == null) {
-            throw new IllegalArgumentException("GroupOrderModel is null and cannot be converted to GODTO.");
+
+    public GODTO create(GODTO godto) {
+        try {
+            logger.info("Creating group order model for store: {}.", godto.getName());
+
+            GroupOrderModel groupOrder = new GroupOrderModel();
+            groupOrder.setName(godto.getName());
+            GroupModel group = groupRepository.findGroupModelByGroupName(godto.getGroupName()).orElse(null);
+
+            logger.info("Group with name {}: {}.", godto.getGroupName(), group);
+
+            groupOrder.setGroup(group);
+            groupOrder.setDateLastUpdated(Instant.now());
+            groupOrderRepository.save(groupOrder);
+
+            logger.info("Group order with name {} saved successfully.", godto.getName());
+
+            return toDTO(groupOrder);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
         }
-        GODTO dto = new GODTO();
-        dto.setId(model.getId());
-        dto.setGroupName(model.getGroup().getGroupName());
-        dto.setName(model.getName());
-        dto.setDateCreated(model.getDateCreated());
-        dto.setDateLastUpdated(model.getDateLastUpdated());
-        return dto;
     }
 
-    public static GroupOrderModel toModel(GODTO dto) {
+    public GroupOrderModel toModel(GODTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("GODTO is null and cannot be converted to GroupOrderModel.");
         }
@@ -106,6 +110,10 @@ public class GroupOrderService {
         GroupModel group = new GroupModel();
         group.setGroupName(dto.getGroupName());
         model.setGroup(group);
+        if (dto.getGomNames() != null && !dto.getGomNames().isEmpty()) {
+            model.setGoms(gomRepository.findByUsernameIn(dto.getGomNames()).stream().toList());
+        }
+
         return model;
     }
 }

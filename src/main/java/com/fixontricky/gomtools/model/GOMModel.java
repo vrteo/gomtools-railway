@@ -2,9 +2,12 @@ package com.fixontricky.gomtools.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,4 +18,7 @@ public class GOMModel {
 
     //TODO: encryption
     private String password;
+
+    @ManyToMany(mappedBy = "goms")
+    private List<GroupOrderModel> groupOrders = new ArrayList<>();
 }

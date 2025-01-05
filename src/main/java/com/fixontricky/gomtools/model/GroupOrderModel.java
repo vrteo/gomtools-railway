@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class GroupOrderModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,6 +20,10 @@ public class GroupOrderModel {
     private GroupModel group;
 
     private String name;
+
+    @ManyToMany
+    @JoinTable(name = "group_order_gom", joinColumns = @JoinColumn(name = "group_order_id"), inverseJoinColumns = @JoinColumn(name = "gom_id"))
+    private List<GOMModel> goms = new ArrayList<>();
 
     // Metadata
     private Instant dateCreated = Instant.now();
